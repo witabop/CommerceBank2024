@@ -8,6 +8,7 @@ public class CommerceBank2024Application {
 
 	public static void main(String[] args) {
 		SpringApplication.run(CommerceBank2024Application.class, args);
+		System.out.println("This is a test push from Jackson");
 	}
 
 }
