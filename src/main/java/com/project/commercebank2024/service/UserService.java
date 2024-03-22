@@ -14,4 +14,8 @@ public class UserService {
     public UserInfo create(UserInfo user){
         return userInfoRepository.save(user);
     }
+
+    // public UserInfo auth(String username, String password){
+    //     return userInfoRepository.check(user);
+    // }
 }
