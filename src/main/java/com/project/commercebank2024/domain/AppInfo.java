@@ -15,7 +15,7 @@ public class AppInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long aid;
-    private String desc;
+    private String app_desc;
 
     @ManyToOne
     @JoinColumn(name = "uid")
