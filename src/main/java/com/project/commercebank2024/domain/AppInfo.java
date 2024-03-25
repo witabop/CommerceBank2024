@@ -4,7 +4,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.catalina.User;
+
+import java.sql.Timestamp;
 
 @Data
 @Entity
@@ -16,6 +17,9 @@ public class AppInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long aid;
     private String app_desc;
+    private Timestamp createdAt;
+    private Timestamp modifiedAt;
+    private String modifiedBy;
 
     @ManyToOne
     @JoinColumn(name = "uid")

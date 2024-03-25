@@ -1,7 +1,6 @@
 package com.project.commercebank2024.controller;
 
 import com.project.commercebank2024.domain.AppInfo;
-import com.project.commercebank2024.domain.UserInfo;
 import com.project.commercebank2024.service.AppInfoService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,10 +18,8 @@ public class AppInfoController {
     @CrossOrigin
     @PostMapping("/appInfo")
     public ResponseEntity<?> save(@RequestBody AppInfo appInfo){
-
         //Assume that admin user is already logged in to the system
-        String userId = "admin";
+        Long userId = 1L;
         return new ResponseEntity<>(appInfoService.create(appInfo, userId), HttpStatus.CREATED);
     }
-
 }

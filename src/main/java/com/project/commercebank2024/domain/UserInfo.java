@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,9 +19,13 @@ public class UserInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long uid;
-    private String userId;
+    @Column(unique = true)
+    private String userName;
     private String password;
     private String role;
+    private Timestamp createdAt;
+    private Timestamp modifiedAt;
+    private String modifiedBy;
 
     @OneToMany(mappedBy = "userInfo")
     @JsonIgnore
