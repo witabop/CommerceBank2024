@@ -18,12 +18,13 @@ public class UserInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long uid;
+    private Long uId;
     @Column(unique = true)
     private String userName;
     private String password;
     private String role;
     private Timestamp createdAt;
+    private String createdBy;
     private Timestamp modifiedAt;
     private String modifiedBy;
 

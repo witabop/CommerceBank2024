@@ -14,10 +14,10 @@ public class AppInfoService {
     private final AppInfoRepository appInfoRepository;
 
     public AppInfo create(AppInfo appInfo, Long userId){
-        UserInfo userInfo = userInfoRepository.findByUid(userId);
+        UserInfo userInfo = userInfoRepository.findByuId(userId);
         if (userInfo == null) {
             userInfo = new UserInfo();
-            userInfo.setUid(userId);
+            userInfo.setUId(userId);
             // Set other properties if needed
             userInfoRepository.save(userInfo);
         }
