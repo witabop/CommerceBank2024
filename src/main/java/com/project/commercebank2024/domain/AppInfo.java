@@ -1,11 +1,14 @@
 package com.project.commercebank2024.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 @Entity
@@ -14,16 +17,12 @@ import java.sql.Timestamp;
 public class AppInfo {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long appInfoId;
     private String app_desc;
     private Timestamp createdAt;
     private Timestamp modifiedAt;
     private String modifiedBy;
 
-
-    @ManyToOne
-    @JoinColumn(name = "uid")
-    private UserInfo userInfo;
-
+    @OneToMany(mappedBy = "appInfo")
+    private List<UserApps> userApps;
 }
