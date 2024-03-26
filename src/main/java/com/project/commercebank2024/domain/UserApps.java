@@ -1,7 +1,7 @@
 package com.project.commercebank2024.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,9 +14,15 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 public class UserApps {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userAppsUid;
-    private Long userUid;
-    private Long appInfoUid;
+    @ManyToOne
+    @JoinColumn(name="uId")
+    @JsonIgnore
+    private UserInfo userInfo;
+    @ManyToOne
+    @JoinColumn(name="appInfoId")
+    private AppInfo appInfo;
     private Timestamp createdAt;
     private String createdBy;
     private Timestamp modifiedAt;

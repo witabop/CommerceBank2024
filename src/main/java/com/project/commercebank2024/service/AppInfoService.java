@@ -7,6 +7,8 @@ import com.project.commercebank2024.repository.UserInfoRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class AppInfoService {
@@ -21,16 +23,16 @@ public class AppInfoService {
             // Set other properties if needed
             userInfoRepository.save(userInfo);
         }
-        appInfo.setUserInfo(userInfo);
 
         System.out.println("User Information:");
-        //S ystem.out.println("ID: {}", userInfo.getUid());
-        //System.out.println("Password: {}", userInfo.getPassword());
-        //System.out.println("Role: {}", userInfo.getRole());
         System.out.println("  --- user ---  ");
         System.out.println("ID " + userInfo.getUserName());
         System.out.println("Password " + userInfo.getPassword());
         System.out.println("Role " + userInfo.getRole());
         return appInfoRepository.save(appInfo);
+    }
+
+    public List<AppInfo> getUserApps(Long userId){
+        return appInfoRepository.findByUserApps_UserInfo_uId(userId);
     }
 }

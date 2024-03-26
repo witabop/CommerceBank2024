@@ -18,8 +18,10 @@ public class AppInfoController {
     @CrossOrigin
     @PostMapping("/appInfo")
     public ResponseEntity<?> save(@RequestBody AppInfo appInfo){
+
         //Assume that admin user is already logged in to the system
         Long userId = 1L;
         return new ResponseEntity<>(appInfoService.create(appInfo, userId), HttpStatus.CREATED);
     }
+
 }

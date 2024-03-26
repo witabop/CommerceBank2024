@@ -30,5 +30,6 @@ public class UserInfo {
 
     @OneToMany(mappedBy = "userInfo")
     @JsonIgnore
-    private List<AppInfo> appInfo = new ArrayList<>();
+    private List<UserApps> userApps = new ArrayList<>();
+
 }
