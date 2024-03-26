@@ -12,6 +12,8 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class AppInfoService {
+    //hibernate:
+    //ddl-auto: create
     private final UserInfoRepository userInfoRepository;
     private final AppInfoRepository appInfoRepository;
 
