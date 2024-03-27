@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/users")
+@CrossOrigin
 public class UserController {
 
         @Autowired
@@ -34,6 +35,9 @@ public class UserController {
             return new ResponseEntity<Optional<UserInfo>>(userService.singleUser(id), HttpStatus.OK);
         }
 
+
+        //this is a simple data transfer object that represents the response format for the authentication requests
+        // basically this is going to be formatted to take in the json data that the http request is going to send us back
         static class AuthenticationResponse {
             @Getter
             private Long UID;
@@ -46,8 +50,6 @@ public class UserController {
                 return isAdmin;
             }
 
-            //this is a simple data transfer object that represents the response format for the authentication requests
-            //basically this is going to be formatted to take in the json data that the http request is going to send us back
             public AuthenticationResponse(Long UID, boolean authenticated, boolean isAdmin, List<String> applications) {
                 this.UID = UID;
                 this.authenticated = authenticated;
