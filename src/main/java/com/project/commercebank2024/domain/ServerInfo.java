@@ -1,13 +1,12 @@
 package com.project.commercebank2024.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 @Entity
@@ -16,7 +15,9 @@ import java.sql.Timestamp;
 public class ServerInfo {
     @Id
     private Long sid;
-    private int appInfoId;
+    @ManyToOne
+    @JoinColumn(name = "appInfoId")
+    private AppInfo appInfo;
     @Column(unique = true)
     private String sourceHostname;
     @Column(unique = true)

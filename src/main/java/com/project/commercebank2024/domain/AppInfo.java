@@ -25,4 +25,6 @@ public class AppInfo {
 
     @OneToMany(mappedBy = "appInfo")
     private List<UserApps> userApps;
+    @OneToMany(mappedBy = "appInfo")
+    private List<ServerInfo> serverInfos;
 }
