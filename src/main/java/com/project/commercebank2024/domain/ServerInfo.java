@@ -25,7 +25,7 @@ public class ServerInfo {
     private String destinationHostName;
     private String destinationIpAddress;
     private String destinationPort;
-    private String ipStatus;
+    private Boolean ipStatus;
     private Timestamp createdAt;
     private String createBy;
     private Timestamp modifiedAt;

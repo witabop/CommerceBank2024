@@ -21,12 +21,8 @@ public class ServerInfoController {
     private ServerInfoService serverInfoService;
 
     @GetMapping
-    public ResponseEntity<List<ServerInfo>> getAllServers(){
-        return new ResponseEntity<List<ServerInfo>>(serverInfoService.allServers(), HttpStatus.OK);
-    }
+    public ResponseEntity<List<ServerInfo>> getAllServers(){return new ResponseEntity<List<ServerInfo>>(serverInfoService.allServers(), HttpStatus.OK);}
     
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<ServerInfo>> getSingleServer(@PathVariable Long id){
-        return new ResponseEntity<Optional<ServerInfo>>(serverInfoService.singleServer(id), HttpStatus.OK);
-    }
+    public ResponseEntity<Optional<ServerInfo>> getSingleServer(@PathVariable Long id){return new ResponseEntity<Optional<ServerInfo>>(serverInfoService.singleServer(id), HttpStatus.OK);}
 }

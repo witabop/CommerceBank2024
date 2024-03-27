@@ -20,15 +20,11 @@ public class UserService {
         return userInfoRepository.save(user);
     }
 
-    public List<UserInfo> allUsers(){
-        return userInfoRepository.findAll();
-    }
+    public List<UserInfo> allUsers(){return userInfoRepository.findAll();}
 
     public Optional<UserInfo> singleUser(Long id){
         return userInfoRepository.findById(id);
     }
 
-    public Optional<UserInfo> auth(String username, String password){
-         return userInfoRepository.findByUserNameAndPassword(username, password);
-    }
+    public Optional<UserInfo> auth(String username, String password){return userInfoRepository.findByUserNameAndPassword(username, password);}
 }

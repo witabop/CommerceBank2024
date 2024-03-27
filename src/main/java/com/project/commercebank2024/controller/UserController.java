@@ -1,5 +1,6 @@
 package com.project.commercebank2024.controller;
 
+import com.project.commercebank2024.domain.ServerInfo;
 import com.project.commercebank2024.domain.UserInfo;
 import com.project.commercebank2024.service.UserService;
 import lombok.AllArgsConstructor;
@@ -26,14 +27,15 @@ public class UserController {
         private UserService userService;
 
         @GetMapping
-        public ResponseEntity<List<UserInfo>> getAllUser() {
-            return new ResponseEntity<List<UserInfo>>(userService.allUsers(), HttpStatus.OK);
-        }
+        public ResponseEntity<List<UserInfo>> getAllUser() {return new ResponseEntity<List<UserInfo>>(userService.allUsers(), HttpStatus.OK);}
 
         @GetMapping("/{id}")
-        public ResponseEntity<Optional<UserInfo>> getSingleUser(@PathVariable Long id) {
-            return new ResponseEntity<Optional<UserInfo>>(userService.singleUser(id), HttpStatus.OK);
-        }
+        public ResponseEntity<Optional<UserInfo>> getSingleUser(@PathVariable Long id) {return new ResponseEntity<Optional<UserInfo>>(userService.singleUser(id), HttpStatus.OK);}
+
+        /*@GetMapping("/{id}/servers")
+        public ResponseEntity<Optional<ServerInfo>> getServers(@PathVariable Long id){
+            return new ResponseEntity<Optional<ServerInfo>>();
+        } */
 
 
         //this is a simple data transfer object that represents the response format for the authentication requests
