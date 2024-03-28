@@ -1,5 +1,6 @@
 package com.project.commercebank2024.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -24,7 +25,9 @@ public class AppInfo {
     private String modifiedBy;
 
     @OneToMany(mappedBy = "appInfo")
+    @JsonIgnore
     private List<UserApps> userApps;
+    @JsonIgnore
     @OneToMany(mappedBy = "appInfo")
     private List<ServerInfo> serverInfos;
 }

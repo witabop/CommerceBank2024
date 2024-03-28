@@ -2,6 +2,7 @@ package com.project.commercebank2024.controller;
 
 import com.project.commercebank2024.domain.ServerInfo;
 import com.project.commercebank2024.domain.UserInfo;
+import com.project.commercebank2024.repository.UserInfoRepository;
 import com.project.commercebank2024.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,10 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -25,18 +23,46 @@ public class UserController {
 
         @Autowired
         private UserService userService;
+        @Autowired
+        private UserInfoRepository userInfoRepository;
 
         @GetMapping
-        public ResponseEntity<List<UserInfo>> getAllUser() {return new ResponseEntity<List<UserInfo>>(userService.allUsers(), HttpStatus.OK);}
+        //this returns all users and the applications they have access to
+        public ResponseEntity<List<UserResponse>> getAllUser() {
+            //List<String> applications = user.getUserApps().stream().map(userApps -> userApps.getAppInfo().getApp_desc()).collect(Collectors.toList());
+            List<UserInfo> users = userService.allUsers();
+            List<UserResponse> userResponses = new ArrayList<>();
+            for(UserInfo u : users){
+                List<String> applications = u.getUserApps().stream().map(userApps -> userApps.getAppInfo().getApp_desc()).collect(Collectors.toList());
+                userResponses.add(new UserResponse(u.getUId(), applications));
+            }
+
+            return new ResponseEntity<>(userResponses, HttpStatus.OK);
+        }
+
+        //this is just another custom response class i created to make the responses easier to read and understand
+        //just have the user id and a list of applications that they have access to in the form of string
+        private static class UserResponse{
+            @Getter
+            private Long UId;
+            @Getter
+            private List<String> applications;
+
+            public UserResponse(Long UId, List<String> applications){
+                this.UId = UId;
+                this.applications = applications;
+            }
+        }
 
         @GetMapping("/{id}")
-        public ResponseEntity<Optional<UserInfo>> getSingleUser(@PathVariable Long id) {return new ResponseEntity<Optional<UserInfo>>(userService.singleUser(id), HttpStatus.OK);}
-
-        /*@GetMapping("/{id}/servers")
-        public ResponseEntity<Optional<ServerInfo>> getServers(@PathVariable Long id){
-            return new ResponseEntity<Optional<ServerInfo>>();
-        } */
-
+        //this returns only one user id and the applications they have access to
+        public ResponseEntity<UserResponse> getSingleUser(@PathVariable Long id) {
+            Optional<UserInfo> user = userService.singleUser(id);
+            //more java bullshit voodoo, this is terribly inefficient. it works for now though
+            List<String> applications = user.get().getUserApps().stream().map(userApps -> userApps.getAppInfo().getApp_desc()).collect(Collectors.toList());
+            UserResponse userResponse = new UserResponse(user.get().getUId(), applications);
+            return new ResponseEntity<>(userResponse, HttpStatus.OK);
+        }
 
         //this is a simple data transfer object that represents the response format for the authentication requests
         // basically this is going to be formatted to take in the json data that the http request is going to send us back

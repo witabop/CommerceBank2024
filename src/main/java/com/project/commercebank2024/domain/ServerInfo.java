@@ -1,9 +1,11 @@
 package com.project.commercebank2024.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLSelect;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -17,7 +19,10 @@ public class ServerInfo {
     private Long sid;
     @ManyToOne
     @JoinColumn(name = "appInfoId")
+    @JsonIgnore
     private AppInfo appInfo;
+    @Column(name = "app_desc")
+    private String appDesc;
     @Column(unique = true)
     private String sourceHostname;
     @Column(unique = true)
@@ -30,5 +35,4 @@ public class ServerInfo {
     private String createBy;
     private Timestamp modifiedAt;
     private String modifiedBy;
-
 }

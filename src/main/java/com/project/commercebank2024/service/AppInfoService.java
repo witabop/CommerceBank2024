@@ -37,5 +37,4 @@ public class AppInfoService {
         return appInfoRepository.save(appInfo);
     }
 
-    //public List<AppInfo> getUserApps(Long userId){return appInfoRepository.findByUserApps_UserInfo_uId(userId);}
 }
