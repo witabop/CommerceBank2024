@@ -1,3 +1,7 @@
+//a lot of this controller code is just complete and utter shit i copied based on what we did in class for UserInfo and AppInfo
+//i have no fucking idea if were ever gonna need them, but theyre here
+//i could prolly make our lives easier by just adding in some functions into all of these controllers/services, but it works for now so fuck it
+//if anyone has suggestions/ideas please say something, cause some of this is so inefficient
 package com.project.commercebank2024.controller;
 
 import com.project.commercebank2024.domain.AppInfo;
