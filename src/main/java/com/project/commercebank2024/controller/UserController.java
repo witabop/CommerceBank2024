@@ -29,11 +29,10 @@ public class UserController {
         @GetMapping
         //this returns all users and the applications they have access to
         public ResponseEntity<List<UserResponse>> getAllUser() {
-            //List<String> applications = user.getUserApps().stream().map(userApps -> userApps.getAppInfo().getApp_desc()).collect(Collectors.toList());
             List<UserInfo> users = userService.allUsers();
             List<UserResponse> userResponses = new ArrayList<>();
             for(UserInfo u : users){
-                List<String> applications = u.getUserApps().stream().map(userApps -> userApps.getAppInfo().getApp_desc()).collect(Collectors.toList());
+                List<String> applications = u.getUserApps().parallelStream().map(userApps -> userApps.getAppInfo().getApp_desc()).collect(Collectors.toList());
                 userResponses.add(new UserResponse(u.getUId(), applications));
             }
 
@@ -59,7 +58,7 @@ public class UserController {
         public ResponseEntity<UserResponse> getSingleUser(@PathVariable Long id) {
             Optional<UserInfo> user = userService.singleUser(id);
             //more java bullshit voodoo, this is terribly inefficient. it works for now though
-            List<String> applications = user.get().getUserApps().stream().map(userApps -> userApps.getAppInfo().getApp_desc()).collect(Collectors.toList());
+            List<String> applications = user.get().getUserApps().parallelStream().map(userApps -> userApps.getAppInfo().getApp_desc()).collect(Collectors.toList());
             UserResponse userResponse = new UserResponse(user.get().getUId(), applications);
             return new ResponseEntity<>(userResponse, HttpStatus.OK);
         }
