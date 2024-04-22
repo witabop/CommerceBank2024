@@ -66,13 +66,3 @@ public class ServerInfoController {
         return new ResponseEntity<>(actualApps, HttpStatus.OK);
     }
 }
-
-/*UserInfo user = userInfoRepository.findByuId(u_id);
-        //this is prolly god awfully inefficient, but its 1:34 am and this was the first thing that came to mind and it works, so fuck it
-        List<ServerInfo> applications = (List<ServerInfo>) user.getUserApps().parallelStream().map(userApps -> userApps.getAppInfo().getServerInfos());
-        List<String> appsStrings = new ArrayList<>();
-        for(ServerInfo app : applications){
-            appsStrings.add(app.getSourceIpAddress());
-        }
-        ServerResponse serverResponse = new ServerResponse(appsStrings);
-        return new ResponseEntity<>(appsStrings, HttpStatus.OK);*/
