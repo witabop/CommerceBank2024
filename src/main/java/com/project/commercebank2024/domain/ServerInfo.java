@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLSelect;
 
@@ -26,6 +27,7 @@ public class ServerInfo {
     @Column(unique = true)
     private String sourceHostname;
     @Column(unique = true)
+    @Getter
     private String sourceIpAddress;
     private String destinationHostName;
     private String destinationIpAddress;
@@ -35,4 +37,5 @@ public class ServerInfo {
     private String createBy;
     private Timestamp modifiedAt;
     private String modifiedBy;
+
 }

@@ -35,7 +35,6 @@ public class UserController {
                 List<String> applications = u.getUserApps().parallelStream().map(userApps -> userApps.getAppInfo().getApp_desc()).collect(Collectors.toList());
                 userResponses.add(new UserResponse(u.getUId(), applications));
             }
-
             return new ResponseEntity<>(userResponses, HttpStatus.OK);
         }
 
