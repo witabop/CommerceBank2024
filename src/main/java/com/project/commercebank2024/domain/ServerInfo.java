@@ -18,10 +18,15 @@ import java.util.List;
 public class ServerInfo {
     @Id
     private Long sid;
-    @ManyToOne
-    @JoinColumn(name = "appInfoId")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "appInfoId", nullable = false)
     @JsonIgnore
     private AppInfo appInfo;
+
+    @Transient
+    public Long getAppInfoId(){
+        return appInfo != null ? appInfo.getAppInfoId() : null;
+    }
     @Column(name = "app_desc")
     private String appDesc;
     @Column(unique = true)

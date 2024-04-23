@@ -10,7 +10,6 @@ import lombok.Getter;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import com.project.commercebank2024.service.UserService;
@@ -18,7 +17,6 @@ import com.project.commercebank2024.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -47,6 +45,7 @@ public class ServerInfoController {
         public List<String> getSrcIpAddresses() {
             return srcIpAddresses;
         }
+
         public ServerResponse(List<String> srcIpAddresses){
             this.srcIpAddresses = srcIpAddresses;
         }
@@ -70,24 +69,22 @@ public class ServerInfoController {
         return new ResponseEntity<>(actualApps, HttpStatus.OK);
     }
 
-    /*@PostMapping(value = "/add", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> createServer(@RequestBody Map<String, ?> serverInfoJSON){
-        try {
-            Long sid = (Long) serverInfoJSON.get("sid");
-            String appDesc = (String) serverInfoJSON.get("appDesc");
-            String sourceHostnae = (String) serverInfoJSON.get("sourceHostname");
-            String sourceIpAddress = (String) serverInfoJSON.get("sourceIpAddress");
-            String
-        }catch (Exception e){
-            return new ResponseEntity(e, HttpStatus.OK);
-        }
-    }*/
-
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteServer(@PathVariable Long id){
         ServerInfo serverInfo = serverInfoService.findById(id).orElse(null);
-        if(serverInfo == null){return new ResponseEntity("Server not found", HttpStatus.OK);}
+        if(serverInfo == null){return new ResponseEntity<>("Server not found", HttpStatus.OK);}
+
         serverInfoRepository.deleteById(id);
         return new ResponseEntity<>("Server deleted successfully", HttpStatus.OK);
     }
 }
+
+/*UserInfo user = userInfoRepository.findByuId(u_id);
+        //this is prolly god awfully inefficient, but its 1:34 am and this was the first thing that came to mind and it works, so fuck it
+        List<ServerInfo> applications = (List<ServerInfo>) user.getUserApps().parallelStream().map(userApps -> userApps.getAppInfo().getServerInfos());
+        List<String> appsStrings = new ArrayList<>();
+        for(ServerInfo app : applications){
+            appsStrings.add(app.getSourceIpAddress());
+        }
+        ServerResponse serverResponse = new ServerResponse(appsStrings);
+        return new ResponseEntity<>(appsStrings, HttpStatus.OK);*/

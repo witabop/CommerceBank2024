@@ -14,9 +14,9 @@ import java.util.Optional;
 public class ServerInfoService {
     @Autowired
     private ServerInfoRepository serverInfoRepository;
-    public ServerInfo create(ServerInfo server){return serverInfoRepository.save(server);}
 
+    public ServerInfo create(ServerInfo serverInfo){return serverInfoRepository.save(serverInfo);}
+    public Optional<ServerInfo> findById(Long id){return serverInfoRepository.findById(id);}
     public List<ServerInfo> allServers(){return serverInfoRepository.findAll();}
 
-    public Optional<ServerInfo> singleServer(Long id){return serverInfoRepository.findById(id);}
 }
