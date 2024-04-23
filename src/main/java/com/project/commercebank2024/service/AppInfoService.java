@@ -29,11 +29,6 @@ public class AppInfoService {
             userInfoRepository.save(userInfo);
         }
 
-        System.out.println("User Information:");
-        System.out.println("  --- user ---  ");
-        System.out.println("ID " + userInfo.getUserName());
-        System.out.println("Password " + userInfo.getPassword());
-        System.out.println("Role " + userInfo.getRole());
         return appInfoRepository.save(appInfo);
     }
 
