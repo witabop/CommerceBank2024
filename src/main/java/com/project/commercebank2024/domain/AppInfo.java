@@ -1,6 +1,7 @@
 package com.project.commercebank2024.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -24,10 +25,10 @@ public class AppInfo {
     private Timestamp modifiedAt;
     private String modifiedBy;
 
-    @OneToMany(mappedBy = "appInfo")
+    @OneToMany(mappedBy = "appInfo",cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<UserApps> userApps;
     @JsonIgnore
-    @OneToMany(mappedBy = "appInfo")
+    @OneToMany(mappedBy = "appInfo",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ServerInfo> serverInfos;
 }

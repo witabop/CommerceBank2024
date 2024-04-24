@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -19,6 +20,7 @@ public class AppInfoService {
     private final AppInfoRepository appInfoRepository;
 
     public List<AppInfo> allApps(){return appInfoRepository.findAll();}
+    public Optional<AppInfo> findById(Long id){return appInfoRepository.findById(id);}
 
     public AppInfo create(AppInfo appInfo, Long userId){
         UserInfo userInfo = userInfoRepository.findByuId(userId);
