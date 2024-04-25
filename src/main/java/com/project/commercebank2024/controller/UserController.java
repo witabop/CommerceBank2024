@@ -119,7 +119,7 @@ public class UserController {
                 //if they are an admin, we simply have applications return all apps possibly available as an admin would have access to everything
                 if(isAdmin){
                     List<AppInfo> adminApps = appInfoRepository.findAll();
-                    /*List<UserApps> adminsUserApps = new ArrayList<>();
+                    List<UserApps> adminsUserApps = new ArrayList<>();
                     for(AppInfo app : adminApps){
                         UserApps userApp = new UserApps(
                                 new Random().nextLong(),
@@ -133,20 +133,20 @@ public class UserController {
                         adminsUserApps.add(userApp);
                         applications.put(app.getAppInfoId(), app.getApp_desc());
                     }
-                    user.setUserApps(adminsUserApps);*/
+                    user.setUserApps(adminsUserApps);
                     response = new AuthenticationResponse(user.getUId(), true, isAdmin, applications);
                     return new ResponseEntity<>(response, HttpStatus.OK);
                 }
-                 //this is some voodoo java magic shit
-                 //basically, we get a UserApps that are associated with the user, then we use .stream() to convert the list into a stream
-                 //as this gives better way of processing collections in a 'functional style'
-                 //then we use .map() to apply a transformation to each element of the stream, for every userapps object we get the corresponding appinfo object via
-                 //getAppInf() and get that apps description from the found AppInfo object
-                 //finally, collect the transformed elements of stream to a new list of strings via collectors.toList()
-                List<UserApps> userAppsList = user.getUserApps();
+                //this is some voodoo java magic shit
+                //basically, we get a UserApps that are associated with the user, then we use .stream() to convert the list into a stream
+                //as this gives better way of processing collections in a 'functional style'
+                //then we use .map() to apply a transformation to each element of the stream, for every userapps object we get the corresponding appinfo object via
+                //getAppInf() and get that apps description from the found AppInfo object
+                //finally, collect the transformed elements of stream to a new list of strings via collectors.toList()
+                /*List<UserApps> userAppsList = user.getUserApps();
                 userAppsList.parallelStream()
                         .map(UserApps::getAppInfo)
-                        .forEach(appInfo -> applications.put(appInfo.getAppInfoId(), appInfo.getApp_desc()));
+                        .forEach(appInfo -> applications.put(appInfo.getAppInfoId(), appInfo.getApp_desc()));*/
                  response = new AuthenticationResponse(user.getUId(), true, isAdmin, applications);
                 return new ResponseEntity<>(response, HttpStatus.OK);
             } else { //if user isnt present then deny them 'entry'
