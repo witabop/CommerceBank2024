@@ -8,6 +8,7 @@ import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -27,6 +28,7 @@ public class AppInfo {
 
     @OneToMany(mappedBy = "appInfo",cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
+    @Setter
     private List<UserApps> userApps;
     @JsonIgnore
     @OneToMany(mappedBy = "appInfo",cascade = CascadeType.ALL, orphanRemoval = true)

@@ -53,17 +53,6 @@ public class ServerInfoController {
     public ResponseEntity<List<ServerInfo>> getAllServers(){return new ResponseEntity<List<ServerInfo>>(serverInfoService.allServers(), HttpStatus.OK);}
 
 
-    static class ServerResponse{
-        @Getter
-        private List<String> srcIpAddresses;
-        public List<String> getSrcIpAddresses() {
-            return srcIpAddresses;
-        }
-
-        public ServerResponse(List<String> srcIpAddresses){
-            this.srcIpAddresses = srcIpAddresses;
-        }
-    }
 
 
     @GetMapping("/{u_id}")
@@ -73,11 +62,9 @@ public class ServerInfoController {
 
         //this is probably inefficient as shit, but its 1:53 am and its the first thing i thought of, and it works so fuck it, we'll do it better later
         List<List<ServerInfo>> applications = user.getUserApps().parallelStream().map(userApps -> userApps.getAppInfo().getServerInfos()).toList();
-        List<String> actualApps = new ArrayList<>();
+        List<ServerInfo> actualApps = new ArrayList<>();
         for(List<ServerInfo> list : applications){
-            for(ServerInfo serverInfo : list){
-                actualApps.add(serverInfo.getSourceIpAddress());
-            }
+            actualApps.addAll(list);
         }
 
         return new ResponseEntity<>(actualApps, HttpStatus.OK);
