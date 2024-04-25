@@ -14,6 +14,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.apache.catalina.User;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import com.project.commercebank2024.service.UserService;
 
 
+import javax.swing.text.html.Option;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -45,7 +47,7 @@ public class ServerInfoController {
     @Autowired
     private AppInfoRepository appInfoRepository;
     @Autowired
-    private UserInfoRepository userInfoRepository;
+    private final UserService userService;
     @Autowired
     private ServerInfoRepository serverInfoRepository;
 
@@ -57,9 +59,9 @@ public class ServerInfoController {
 
     @GetMapping("/{u_id}")
     public ResponseEntity<?> getServersForUser(@PathVariable Long u_id){
-        UserInfo user = userInfoRepository.findByuId(u_id);
-        if(user == null){return new ResponseEntity<>("Not found", HttpStatus.NOT_FOUND);}
-
+        Optional<UserInfo> optionalUserInfo = userService.singleUser(u_id);
+        if(!optionalUserInfo.isPresent()){return new ResponseEntity<>("Not found", HttpStatus.NOT_FOUND);}
+        UserInfo user = optionalUserInfo.get();
         //this is probably inefficient as shit, but its 1:53 am and its the first thing i thought of, and it works so fuck it, we'll do it better later
         List<List<ServerInfo>> applications = user.getUserApps().parallelStream().map(userApps -> userApps.getAppInfo().getServerInfos()).toList();
         List<ServerInfo> actualApps = new ArrayList<>();
@@ -94,7 +96,7 @@ public class ServerInfoController {
             Timestamp modifiedAt = Timestamp.valueOf(LocalDateTime.parse(modifiedAtStr, DateTimeFormatter.ISO_DATE_TIME));
             String modifiedBy = (String) serverEntity.get("modifiedBy");
             serverInfoRepository.save(new ServerInfo(sid, appInfo, appDesc, sourceHostname, sourceIpAddress, destinationHostName,
-                                                     destinationIpAddress, destinationPort, ipStatus, createdAt, createBy, modifiedAt, modifiedBy));
+                        destinationIpAddress, destinationPort, ipStatus, createdAt, createBy, modifiedAt, modifiedBy));
             return new ResponseEntity<>("Server added successfully", HttpStatus.OK);
         }catch (Exception e){
             System.out.println(e);

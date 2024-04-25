@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class UserInfo {
     private String modifiedBy;
 
     @OneToMany(mappedBy = "userInfo")
+    @Setter
     @JsonIgnore
     private List<UserApps> userApps = new ArrayList<>();
 

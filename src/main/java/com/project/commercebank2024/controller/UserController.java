@@ -2,6 +2,7 @@ package com.project.commercebank2024.controller;
 
 import com.project.commercebank2024.domain.AppInfo;
 import com.project.commercebank2024.domain.ServerInfo;
+import com.project.commercebank2024.domain.UserApps;
 import com.project.commercebank2024.domain.UserInfo;
 import com.project.commercebank2024.repository.AppInfoRepository;
 import com.project.commercebank2024.repository.UserInfoRepository;
@@ -14,6 +15,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -58,8 +62,11 @@ public class UserController {
 
         @GetMapping("/{id}")
         //this returns only one user id and the applications they have access to
-        public ResponseEntity<UserResponse> getSingleUser(@PathVariable Long id) {
+        public ResponseEntity<?> getSingleUser(@PathVariable Long id) {
             Optional<UserInfo> user = userService.singleUser(id);
+            if(!user.isPresent()){
+                return new ResponseEntity<>("User not found", HttpStatus.OK);
+            }
             //more java bullshit voodoo, this is terribly inefficient. it works for now though
             List<String> applications = user.get().getUserApps().parallelStream().map(userApps -> userApps.getAppInfo().getApp_desc()).collect(Collectors.toList());
             UserResponse userResponse = new UserResponse(user.get().getUId(), applications);
@@ -75,12 +82,12 @@ public class UserController {
             private boolean authenticated;
             private boolean isAdmin;
             @Getter
-            private List<String> applications;
+            private Map<Long, String> applications;
             public boolean isAdmin() {
                 return isAdmin;
             }
 
-            public AuthenticationResponse(Long UID, boolean authenticated, boolean isAdmin, List<String> applications) {
+            public AuthenticationResponse(Long UID, boolean authenticated, boolean isAdmin, Map<Long, String> applications) {
                 this.UID = UID;
                 this.authenticated = authenticated;
                 this.isAdmin = isAdmin;
@@ -93,8 +100,10 @@ public class UserController {
         //applications: ['API', 'PUP', 'RFS', 'TBD', 'INF', 'MQS'] }
         @PostMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
         public ResponseEntity<?> authenticate(@RequestBody Map<String, String> credentials) {
-            List<String> applications = new ArrayList<>();
+            Map<Long, String> applications = new HashMap<>();
             AuthenticationResponse response;
+            OffsetDateTime currTime = OffsetDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
             //get the username and password from the payload that is incoming, meaning the JSON format data
             String username = credentials.get("username");
             String password = credentials.get("password");
@@ -108,9 +117,23 @@ public class UserController {
 
                 //this block is to check if the person calling this function is an admin or not
                 //if they are an admin, we simply have applications return all apps possibly available as an admin would have access to everything
-                //could prolly optimize this but this is easy enough for right now;
                 if(isAdmin){
-                    applications = appInfoRepository.findAll().parallelStream().map(AppInfo::getApp_desc).collect(Collectors.toList());
+                    List<AppInfo> adminApps = appInfoRepository.findAll();
+                    /*List<UserApps> adminsUserApps = new ArrayList<>();
+                    for(AppInfo app : adminApps){
+                        UserApps userApp = new UserApps(
+                                new Random().nextLong(),
+                                user,
+                                app,
+                                Timestamp.valueOf(currTime.format(formatter)),
+                                "admin",
+                                Timestamp.valueOf(currTime.format(formatter)),
+                                "admin"
+                        );
+                        adminsUserApps.add(userApp);
+                        applications.put(app.getAppInfoId(), app.getApp_desc());
+                    }
+                    user.setUserApps(adminsUserApps);*/
                     response = new AuthenticationResponse(user.getUId(), true, isAdmin, applications);
                     return new ResponseEntity<>(response, HttpStatus.OK);
                 }
@@ -120,11 +143,14 @@ public class UserController {
                  //then we use .map() to apply a transformation to each element of the stream, for every userapps object we get the corresponding appinfo object via
                  //getAppInf() and get that apps description from the found AppInfo object
                  //finally, collect the transformed elements of stream to a new list of strings via collectors.toList()
-                 applications = user.getUserApps().stream().map(userApps -> userApps.getAppInfo().getApp_desc()).collect(Collectors.toList());
+                List<UserApps> userAppsList = user.getUserApps();
+                userAppsList.parallelStream()
+                        .map(UserApps::getAppInfo)
+                        .forEach(appInfo -> applications.put(appInfo.getAppInfoId(), appInfo.getApp_desc()));
                  response = new AuthenticationResponse(user.getUId(), true, isAdmin, applications);
                 return new ResponseEntity<>(response, HttpStatus.OK);
             } else { //if user isnt present then deny them 'entry'
-                response = new AuthenticationResponse(null, false, false, Collections.emptyList());
+                response = new AuthenticationResponse(null, false, false, new HashMap<>());
                 return ResponseEntity.ok(response);
             }
         }

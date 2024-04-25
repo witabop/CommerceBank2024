@@ -29,9 +29,7 @@ public class ServerInfo {
     }
     @Column(name = "app_desc")
     private String appDesc;
-    @Column(unique = true)
     private String sourceHostname;
-    @Column(unique = true)
     @Getter
     private String sourceIpAddress;
     private String destinationHostName;
