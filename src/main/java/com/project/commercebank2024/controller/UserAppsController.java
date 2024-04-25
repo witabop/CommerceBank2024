@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -39,9 +40,9 @@ public class UserAppsController {
         }
     }
 
-    //this is just some boiler plate stuff for now, this is where im wanting to implement the remove users app functionality
-    //@DeleteMapping("/removeApps")
-    /*public ResponseEntity<Optional<UserApps>> removeUserApp(@PathVariable Long id){
+    @PostMapping("/modifyusers")
+    public ResponseEntity<String> modifyUsers(@RequestBody Map<String, ?> incomingModification){
         return null;
-    }*/
+    }
+
 }
