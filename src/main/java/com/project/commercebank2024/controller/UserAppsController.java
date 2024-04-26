@@ -15,6 +15,7 @@ import com.project.commercebank2024.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -85,10 +86,11 @@ public class UserAppsController {
     @PostMapping("/modifyusers")
     public ResponseEntity<?> modifyUsers(@RequestBody Map<String, ?> incomingModification){
         Long userId = Long.valueOf(incomingModification.get("uid").toString());
-        Optional<UserInfo> userInfo = userService.singleUser(userId);
-        if(!userInfo.isPresent()){
+        Optional<UserInfo> optionalUserInfo = userService.singleUser(userId);
+        if(!optionalUserInfo.isPresent()){
             return new ResponseEntity<>("No user found", HttpStatus.OK);
         }
+        UserInfo userInfo = optionalUserInfo.get();
         List<Map<String, ?>> applications = (List<Map<String,?>>) incomingModification.get("application");
 
         try {
@@ -100,7 +102,7 @@ public class UserAppsController {
                 }
                 AppInfo appInfo = optionalAppInfo.get();
                 UserApps userApps = new UserApps();
-                userApps.setUserInfo(userInfo.get());
+                userApps.setUserInfo(userInfo);
                 userApps.setAppInfo(appInfo);
                 userApps.setAppInfo(appInfo);
                 //Timestamp.valueOf(LocalDateTime.parse(createdAtStr, DateTimeFormatter.ISO_DATE_TIME));
@@ -113,6 +115,7 @@ public class UserAppsController {
                 userApps.setCreatedBy(app.get("createdBy").toString());
                 userApps.setModifiedBy(app.get("modifiedBy").toString());
                 userAppsRepository.save(userApps);
+                userInfo.addUserApps(userApps);
             }
             return new ResponseEntity<>("Userapps done successfully", HttpStatus.OK);
         }catch (Exception e) {

@@ -34,4 +34,8 @@ public class UserInfo {
     @JsonIgnore
     private List<UserApps> userApps = new ArrayList<>();
 
+    public void addUserApps(UserApps appToAdd){
+        userApps.add(appToAdd);
+    }
+
 }
