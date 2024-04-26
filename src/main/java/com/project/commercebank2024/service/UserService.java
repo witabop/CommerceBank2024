@@ -27,4 +27,5 @@ public class UserService {
     }
 
     public Optional<UserInfo> auth(String username, String password){return userInfoRepository.findByUserNameAndPassword(username, password);}
+    public UserInfo save(UserInfo userInfo){return userInfoRepository.save(userInfo);}
 }

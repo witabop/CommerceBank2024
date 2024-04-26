@@ -124,6 +124,26 @@ public class UserAppsController {
     }
 
 
+    @DeleteMapping("/delete/{uid}/{appId}")
+    public ResponseEntity<?> deleteUserApp(@PathVariable Long uid, @PathVariable Long appId){
+        try{
+            Optional<UserInfo> optionalUserInfo = userService.singleUser(uid);
+            Optional<AppInfo> optionalAppInfo = appInfoService.findById(appId);
+            UserInfo userInfo= optionalUserInfo.get();
+            AppInfo appInfo = optionalAppInfo.get();
+
+            Optional<UserApps> userAppsOptional = userInfo.getUserApps().stream()
+                    .filter(userApps -> userApps.getAppInfo().getAppInfoId().equals(appId))
+                    .findFirst();
+            UserApps userApps = userAppsOptional.get();
+            userAppsRepository.delete(userApps);
+            //userService.save(userInfo);
+            return new ResponseEntity<>("App removed from access", HttpStatus.OK);
+
+        }catch (Exception e){
+            return new ResponseEntity<>(e.toString(), HttpStatus.OK);
+        }
+    }
     /*@PostMapping("/modifyusers")
     public ResponseEntity<?> modifyUsers(@RequestBody Map<String, ?> incomingModification){
         Long userId = Long.valueOf(incomingModification.get("uid").toString());
