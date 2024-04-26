@@ -22,6 +22,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.swing.text.html.Option;
+import java.security.Key;
+import java.sql.SQLOutput;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
@@ -83,7 +85,46 @@ public class UserAppsController {
         }
     }
 
-    @PostMapping("/modifyusers")
+    @PostMapping("/add")
+    public ResponseEntity<?> addUserApps(@RequestBody Map<String, ?> incomingAdditions){
+        try {
+            OffsetDateTime currTime = OffsetDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+
+            Long userId = Long.valueOf(incomingAdditions.get("uid").toString());
+            Optional<UserInfo> optionalUserInfo = userService.singleUser(userId);
+            UserInfo userInfo = optionalUserInfo.get();
+            UserApps userApps = new UserApps();
+            List<Map<String, ?>> newApp = (List<Map<String, ?>>) incomingAdditions.get("application");
+            System.out.println(newApp.toString());
+            for(Map<String, ?> info: newApp) {
+                Long appInfoId = Long.valueOf(info.get("appInfoId").toString());
+                Optional<AppInfo> optionalAppInfo = appInfoService.findById(appInfoId);
+                AppInfo appInfo = optionalAppInfo.get();
+                boolean alreadyExists = userInfo.getUserApps().stream()
+                        .anyMatch(userApp -> userApp.getAppInfo().getAppInfoId().equals(appInfoId));
+
+                if (alreadyExists) {
+                    return new ResponseEntity<>("User already has this app", HttpStatus.OK);
+                }
+                Long userAppsUid = Long.valueOf(info.get("user_apps_uid").toString());
+                String modifiedBy = info.get("modifiedBy").toString();
+                String createdBy = info.get("createdBy").toString();
+                Timestamp createdAt = Timestamp.valueOf(currTime.format(formatter));
+                Timestamp modifiedAt = Timestamp.valueOf(currTime.format(formatter));
+                userApps = new UserApps(userAppsUid, userInfo, appInfo, createdAt, "admin1", modifiedAt, "admin1");
+            }
+            userAppsRepository.save(userApps);
+            //(Timestamp.valueOf(currTime.format(formatter)));
+            //userApps.setModifiedAt((Timestamp.valueOf(currTime.format(formatter))));
+            return new ResponseEntity<>("Test", HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.toString(), HttpStatus.OK);
+        }
+    }
+
+
+    /*@PostMapping("/modifyusers")
     public ResponseEntity<?> modifyUsers(@RequestBody Map<String, ?> incomingModification){
         Long userId = Long.valueOf(incomingModification.get("uid").toString());
         Optional<UserInfo> optionalUserInfo = userService.singleUser(userId);
@@ -104,8 +145,7 @@ public class UserAppsController {
                 UserApps userApps = new UserApps();
                 userApps.setUserInfo(userInfo);
                 userApps.setAppInfo(appInfo);
-                userApps.setAppInfo(appInfo);
-                //Timestamp.valueOf(LocalDateTime.parse(createdAtStr, DateTimeFormatter.ISO_DATE_TIME));
+
                 OffsetDateTime currTime = OffsetDateTime.now();
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
@@ -115,12 +155,12 @@ public class UserAppsController {
                 userApps.setCreatedBy(app.get("createdBy").toString());
                 userApps.setModifiedBy(app.get("modifiedBy").toString());
                 userAppsRepository.save(userApps);
-                userInfo.addUserApps(userApps);
+                //userInfo.addUserApps(userApps);
             }
             return new ResponseEntity<>("Userapps done successfully", HttpStatus.OK);
         }catch (Exception e) {
             return new ResponseEntity<>("Error \n" + e, HttpStatus.OK);
         }
 
-    }
+    }*/
 }
