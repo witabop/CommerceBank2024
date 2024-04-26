@@ -5,6 +5,7 @@ import com.project.commercebank2024.domain.ServerInfo;
 import com.project.commercebank2024.domain.UserApps;
 import com.project.commercebank2024.domain.UserInfo;
 import com.project.commercebank2024.repository.AppInfoRepository;
+import com.project.commercebank2024.repository.UserAppsRepository;
 import com.project.commercebank2024.repository.UserInfoRepository;
 import com.project.commercebank2024.service.UserService;
 import lombok.AllArgsConstructor;
@@ -33,6 +34,8 @@ public class UserController {
         private UserInfoRepository userInfoRepository;
         @Autowired
         private AppInfoRepository appInfoRepository;
+        @Autowired
+        private UserAppsRepository userAppsRepository;
 
         @GetMapping
         //this returns all users and the applications they have access to
@@ -130,7 +133,8 @@ public class UserController {
                                 Timestamp.valueOf(currTime.format(formatter)),
                                 "admin"
                         );
-                        adminsUserApps.add(userApp);
+                        userAppsRepository.save(userApp);
+                        user.addUserApps(userApp);
                         applications.put(app.getAppInfoId(), app.getApp_desc());
                     }
                     user.setUserApps(adminsUserApps);
