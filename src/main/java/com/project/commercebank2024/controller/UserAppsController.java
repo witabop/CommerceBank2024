@@ -137,7 +137,8 @@ public class UserAppsController {
                     .findFirst();
             UserApps userApps = userAppsOptional.get();
             userAppsRepository.delete(userApps);
-            //userService.save(userInfo);
+            userInfo.getUserApps().remove(userApps);
+            userService.save(userInfo);
             return new ResponseEntity<>("App removed from access", HttpStatus.OK);
 
         }catch (Exception e){
