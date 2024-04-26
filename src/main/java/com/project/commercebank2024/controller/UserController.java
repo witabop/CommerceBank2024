@@ -124,17 +124,22 @@ public class UserController {
                     List<AppInfo> adminApps = appInfoRepository.findAll();
                     List<UserApps> adminsUserApps = new ArrayList<>();
                     for(AppInfo app : adminApps){
-                        UserApps userApp = new UserApps(
-                                new Random().nextLong(),
-                                user,
-                                app,
-                                Timestamp.valueOf(currTime.format(formatter)),
-                                "admin",
-                                Timestamp.valueOf(currTime.format(formatter)),
-                                "admin"
-                        );
-                        userAppsRepository.save(userApp);
-                        user.addUserApps(userApp);
+                        boolean hasAccess = user.getUserApps().stream()
+                                .anyMatch(userApp -> userApp.getAppInfo().getAppInfoId().equals(app.getAppInfoId()));
+                        if(!hasAccess) {
+                            UserApps userApp = new UserApps(
+                                    new Random().nextLong(),
+                                    user,
+                                    app,
+                                    Timestamp.valueOf(currTime.format(formatter)),
+                                    "admin",
+                                    Timestamp.valueOf(currTime.format(formatter)),
+                                    "admin"
+                            );
+
+                            userAppsRepository.save(userApp);
+                            //user.addUserApps(userApp);
+                        }
                         applications.put(app.getAppInfoId(), app.getApp_desc());
                     }
                     user.setUserApps(adminsUserApps);
