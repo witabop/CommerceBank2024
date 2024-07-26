@@ -37,5 +37,5 @@ public class UserInfo {
     public void addUserApps(UserApps appToAdd){
         userApps.add(appToAdd);
     }
-
+    
 }

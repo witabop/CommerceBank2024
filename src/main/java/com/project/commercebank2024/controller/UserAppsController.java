@@ -66,6 +66,7 @@ public class UserAppsController {
         }
 
     }
+    
     @GetMapping("/{uId}")
     public ResponseEntity<?> getUserApp(@PathVariable Long uId){
         Optional<UserInfo> user = userService.singleUser(uId);
@@ -87,6 +88,7 @@ public class UserAppsController {
 
     @PostMapping("/add")
     public ResponseEntity<?> addUserApps(@RequestBody Map<String, ?> incomingAdditions){
+        
         try {
             OffsetDateTime currTime = OffsetDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
@@ -115,14 +117,11 @@ public class UserAppsController {
                 userApps = new UserApps(userAppsUid, userInfo, appInfo, createdAt, "admin1", modifiedAt, "admin1");
             }
             userAppsRepository.save(userApps);
-            //(Timestamp.valueOf(currTime.format(formatter)));
-            //userApps.setModifiedAt((Timestamp.valueOf(currTime.format(formatter))));
             return new ResponseEntity<>("Test", HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.toString(), HttpStatus.OK);
         }
     }
-
 
     @DeleteMapping("/delete/{uid}/{appId}")
     public ResponseEntity<?> deleteUserApp(@PathVariable Long uid, @PathVariable Long appId){
